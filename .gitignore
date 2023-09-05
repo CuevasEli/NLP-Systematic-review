@@ -1,6 +1,7 @@
 
 raw_data/*
 data/*
+fig/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
