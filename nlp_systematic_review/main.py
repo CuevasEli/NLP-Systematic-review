@@ -33,27 +33,42 @@ def get_topic_infos(topic_model):
 
     return topic_info
 
-def visualize_data(processed_df, visu_type):
+def visualize_data_v(processed_df, visu_type, html):
     """
-    Visualizes topics using BERTopic. visu_type: Type of visualization ('circle', 'bar', or 'rank')
+    Visualizes topics using BERTopic. visu_type: Type of visualization ('circle', 'bar', or 'rank'),
+    use html = True when working outside of Google Colab.
     """
     representation_model = KeyBERTInspired()
     topic_model = BERTopic(representation_model=representation_model)
     topics, probs = topic_model.fit_transform(processed_df['abstract_text'])
-    if visu_type == 'circle':
-        circle = topic_model.visualize_topics()
+    if html:
+        if visu_type == 'circle':
+            circle = topic_model.visualize_topics()
+            circle.write_html("circle.html")
 
-        return circle
+        elif visu_type == 'bar':
+            bar = topic_model.visualize_barchart()
+            bar.write_html("bar.html")
 
-    elif visu_type == 'bar':
-        bar = topic_model.visualize_barchart()
+        elif visu_type == 'rank':
+            rank = topic_model.visualize_term_rank()
+            rank.write_html("rank.html")
+    else:
+        if visu_type == 'circle':
+            circle = topic_model.visualize_topics()
 
-        return bar
+            return circle
 
-    elif visu_type == 'rank':
-        rank = topic_model.visualize_term_rank()
+        elif visu_type == 'bar':
+            bar = topic_model.visualize_barchart()
 
-        return rank
+            return bar
+
+        elif visu_type == 'rank':
+            rank = topic_model.visualize_term_rank()
+
+            return rank
+
 
 def get_topics_kw(topic_model):
     """returns a df with 10 main keywords for each topic"""
