@@ -2,8 +2,6 @@
 
 <style>
     body {
-
-        background: linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6);
         position: relative;
     }
 
@@ -33,6 +31,21 @@
         margin: 10px;
     }
 
+    /* Citation styling */
+    .option-1 {
+        font-style: italic;
+        margin-top:250px;
+        font-size: 1.2em;
+        text-align: center;
+        color: #ffffff;
+        border-top: 1px solid #ffffff;
+        border-bottom: 1px solid #ffffff;
+        padding: 15px 0;
+        width: 70%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     @keyframes glide {
         from {
             transform: translateY(0);
@@ -51,17 +64,19 @@
             <!-- Form for keywords search -->
             <form action="/search" method="post">
               <div class="input-group">
-                <input type="text" class="form-control mr-2" placeholder="What are you looking for?" name="keywords"> <!-- Added mr-2 here -->
+                <input type="text" class="form-control mr-2" placeholder="What are you looking for?" name="keywords">
                 <div class="input-group-append">
                     <button class="btn btn-outline-light" type="submit">Search</button>
                 </div>
             </div>
-                </div>
             </form>
         </div>
     </div>
 </div>
-
+<!-- Option 1 -->
+<div class="option-1">
+  "Where words are absent, phenomena do not exist. Language is the tool of the scientist, much like the telescope or microscope." - Albert Einstein
+</div>
 <!-- 3 dots -->
 <div class="d-flex justify-content-center mt-4">
     <div class="dot"></div>
