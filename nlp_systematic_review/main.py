@@ -1,11 +1,64 @@
 from bertopic import *
 import pandas as pd
 import numpy as np
+
+from nlp_systematic_review.data import *#load_data_bq, get_data_from_bq, get_data_row_count
+from nlp_systematic_review.params import *
+
 from bertopic.representation import KeyBERTInspired
 from sklearn.feature_extraction.text import CountVectorizer, ENGLISH_STOP_WORDS
 from gensim.corpora.dictionary import Dictionary
 from gensim.models.coherencemodel import CoherenceModel
 from gensim.models.ldamodel import LdaModel
+
+
+def get_raw_data():
+    print('function start')
+    table = f"raw_{TABLE}"
+    query = f"""
+        SELECT
+          *
+        FROM {GCP_PROJECT_SEBT84}.{BQ_DATASET}.{table}
+        """
+    df = get_data_from_bq(query)
+
+    print(f"✅ Raw data extracted from bigquery, with shape {df.shape}")
+
+    return df
+
+def preprocess_data_bq(df: pd.DataFrame):
+    """provide the DataFrame it will preprocessed the dataset and upload it to BQ"""
+
+    assert isinstance(df, pd.DataFrame), "path_to_csv should be a string"
+
+    df = df.sort_values(by=['abstract_id', 'line_number'])
+    df['abstract_text'] = df['abstract_text'].astype(str)
+    concatenated_abstract = df.groupby('abstract_id')['abstract_text'].apply(' '.join).reset_index()
+    df = df.merge(concatenated_abstract, on='abstract_id', how='left')
+    data = df[['abstract_id', 'abstract_text_y']].drop_duplicates().rename(columns={'abstract_text_y': 'abstract_text'})
+
+    load_data_bq(data,replace=True)
+
+    print(f"✅ Data processed and uploaded to bigquery, with shape {data.shape}")
+
+def get_processed_data(frac=0.02
+                       ,table='concat_pubmed'):
+
+    """get processed data to feed model, you can select the size of the subset needed"""
+    table_size = get_data_row_count(table)
+
+    sample_size = round(table_size * frac)
+
+    query = f"""
+        SELECT
+          *
+        FROM {GCP_PROJECT_SEBT84}.{BQ_DATASET}.{table}
+        limit {sample_size}
+        """
+
+    df = get_data_from_bq(query)
+
+    return df
 
 
 
@@ -203,8 +256,9 @@ def find_article(query,model,path_to_csv, frac):
     # Generate the article destination URL + display the options
     article_list = df_with_topics[df_with_topics['Topic'] == int(selected_id)]#.count()
     article_list['article_link'] = article_list['abstract_id'].apply(url_destination)
-    display(article_list[['Document','article_link']])
-    ##hard code the csv position, just query
+
+    article_list[['Document','article_link']]
+
 
 def save_model(topic_model, path):
     """save model into a given path"""
