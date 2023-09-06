@@ -7,6 +7,8 @@ from gensim.corpora.dictionary import Dictionary
 from gensim.models.coherencemodel import CoherenceModel
 from gensim.models.ldamodel import LdaModel
 
+
+
 def preprocess_data(path_to_csv, frac):
     """provide the path to csv and the frac of data you want to use and it will
     return the preprocessed dataset in pd.DataFrame format"""
@@ -26,7 +28,7 @@ def train_model(processed_df, use_stop_words=False):
     """Input a df, train the model with an option to use custom stop words."""
 
     if use_stop_words:
-        # Extracting custom stop words within the function
+
         documents = processed_df['abstract_text'].tolist()
 
         vectorizer = CountVectorizer(stop_words=list(ENGLISH_STOP_WORDS))
@@ -79,27 +81,22 @@ def coherence_metric(topic_model, data):
     - coherence: Average topic coherence score
     """
 
-    # Extract topics from BERTopic model
     topics = topic_model.get_topics()
 
-    # Prepare data for Gensim's CoherenceModel
+
     texts = [text.split() for text in data['abstract_text']]
     dictionary = Dictionary(texts)
     corpus = [dictionary.doc2bow(text) for text in texts]
 
-    # Convert BERTopic topics to Gensim's format
+
     gensim_topics = {key: [word[0] for word in value] for key, value in topics.items()}
     lda_topics = list(gensim_topics.values())
 
-    # Calculate coherence
+
     cm = CoherenceModel(topics=lda_topics, texts=texts, dictionary=dictionary, coherence='c_v')
     coherence = cm.get_coherence()
 
     return coherence
-
-#topics, probs, topic_model = train_model(processed_df, use_stop_words=True)
-#coherence_score = coherence_metric(topic_model, processed_df)
-#print("Average topic coherence:", coherence_score)
 
 
 def visualize_data_v(processed_df, visu_type, html):
@@ -207,6 +204,7 @@ def find_article(query,model,path_to_csv, frac):
     article_list = df_with_topics[df_with_topics['Topic'] == int(selected_id)]#.count()
     article_list['article_link'] = article_list['abstract_id'].apply(url_destination)
     display(article_list[['Document','article_link']])
+    ##hard code the csv position, just query
 
 def save_model(topic_model, path):
     """save model into a given path"""
@@ -216,6 +214,7 @@ def save_model(topic_model, path):
 def load_model(path):
     """load model from a directory path. the directory should contain json files
     and safetensor file"""
+    # the path should be inside the function
     assert isinstance(path, str), 'please provide a string as path'
     loaded_model = BERTopic.load(path)
     return loaded_model
