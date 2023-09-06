@@ -137,3 +137,15 @@ def find_article(query,model,path_to_csv, frac):
     article_list = df_with_topics[df_with_topics['Topic'] == int(selected_id)]#.count()
     article_list['article_link'] = article_list['abstract_id'].apply(url_destination)
     display(article_list[['Document','article_link']])
+
+def save_model(topic_model, path):
+    """save model into a given path"""
+    assert isinstance(path, str), 'please provide a string as path'
+    topic_model.save(path, serialization="safetensors")
+
+def load_model(path):
+    """load model from a directory path. the directory should contain json files
+    and safetensor file"""
+    assert isinstance(path, str), 'please provide a string as path'
+    loaded_model = BERTopic.load(path)
+    return loaded_model
