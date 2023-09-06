@@ -1,0 +1,72 @@
+{% include 'header.html' %}
+
+<style>
+    body {
+
+        background: linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6);
+        position: relative;
+    }
+
+    /* Overlay */
+    body::before {
+        content: "";
+        background-image: url('https://www.researchgate.net/profile/Nancy-Longnecker/publication/264742373/figure/fig3/AS:296008585105420@1447585354849/Scientific-knowledge-word-cloud-for-student-ideas-n-721-generated-in-group-meaning.png');
+        background-size: 50%;
+        background-position: center;
+        background-repeat: no-repeat;
+        mix-blend-mode: multiply; /* blend the white background with the gradient */
+        opacity: 0.7;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        z-index: -1;
+    }
+
+    .dot {
+        width: 15px;
+        height: 15px;
+        background-color: white;
+        border-radius: 50%;
+        animation: glide 1.5s infinite alternate;
+        margin: 10px;
+    }
+
+    @keyframes glide {
+        from {
+            transform: translateY(0);
+        }
+        to {
+            transform: translateY(15px);
+        }
+    }
+</style>
+
+<div class="container h-100 mt-5">
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="col-md-6 text-center">
+            <h1 class="text-light mb-4">Welcome to Article Retriever</h1>
+            <p class="text-light mb-4">Your one-stop platform to retrieve scientific articles with NLP.</p>
+            <!-- Form for keywords search -->
+            <form action="/search" method="post">
+              <div class="input-group">
+                <input type="text" class="form-control mr-2" placeholder="What are you looking for?" name="keywords"> <!-- Added mr-2 here -->
+                <div class="input-group-append">
+                    <button class="btn btn-outline-light" type="submit">Search</button>
+                </div>
+            </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 3 dots -->
+<div class="d-flex justify-content-center mt-4">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+</div>
+
+{% include 'footer.html' %}
