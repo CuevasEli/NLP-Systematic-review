@@ -21,24 +21,21 @@ def root():
 @app.get("/topic_search")
 def topic_search(query: str):
 
-    model = load_model()
+    query_topics = app.state.model.find_topics(query)
+    topic_info = app.state.model.get_topic_info()
 
-    f_topics, f_prob = model.find_topics(query)
-    topic_info = model.get_topic_info()
+    topic_list =[]
 
-    recommendations = []
+    for t in range(len(query_topics[0])):
+        topic = topic_info[topic_info['Topic'] == query_topics[0][t]]
 
-    for t in range(len(f_topics)):
-        topic_id = f_topics[t]
-        topic_prob = round(f_prob[t]*100, 2)
-        topic_name = topic_info['Name'][topic_info['Topic'] == topic_id].values[0]
-        article_count = df_with_topics['abstract_id'][df_with_topics['Topic'] == t].count()
+        topic_id = list(topic['Topic'])[0]
+        topic_prob = query_topics[1][t]
+        topic_name = list(topic['Name'])[0]
+        topic_representation = list(topic['Representation'])[0]
 
-        recommendations.append({
-            "topic_name": topic_name,
-            "probability": topic_prob,
-            "article_count": article_count,
-            "topic_id": topic_id
-        })
+        topic_dict = dict({"topic_id":topic_id,"topic_prob":topic_prob,"topic_name":topic_name,"topic_representation":topic_representation})
 
-    return {"recommended_topics": recommendations}
+        topic_list.append(topic_dict)
+
+    return {"recommended_topics": topic_list}
