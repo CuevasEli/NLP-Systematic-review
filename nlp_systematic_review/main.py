@@ -302,8 +302,10 @@ def save_model(topic_model, path):
     topic_model.save(path, serialization="safetensors")
 
 def load_model():
-    """load model from a directory path. the directory should contain json files
+    """load model the directory should contain json files
     and safetensor file"""
-    path = ''
+    # patht to model is specified below
+    path = 'nlp_systematic_review/model'
     loaded_model = BERTopic.load(path)
+
     return loaded_model
