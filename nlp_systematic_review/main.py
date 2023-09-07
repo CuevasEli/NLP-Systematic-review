@@ -273,3 +273,18 @@ def load_model():
     loaded_model = BERTopic.load(path)
 
     return loaded_model
+
+def get_latest_data_and_topics():
+    table = f"topics_{TABLE}"
+    query = f"""
+        SELECT
+          *
+        FROM {GCP_PROJECT_SEBT84}.{BQ_DATASET}.{table}
+        """
+
+    articles = get_data_from_bq(query)
+
+    articles_slim = articles[['abstract_id','Topic','Probability']]
+    articles_slim['article_url'] = articles_slim['abstract_id'].apply(lambda x: 'https://pubmed.ncbi.nlm.nih.gov/'+str(x))
+
+    return articles_slim
