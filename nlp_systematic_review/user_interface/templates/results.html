@@ -1,0 +1,75 @@
+{% include 'header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Card Hover Effect */
+        .card {
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+        }
+
+        /* Card Link Hover Effect */
+        .card-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="mb-4 text-white">Recommended Articles</h1>
+        <div class="row">
+            {% for topic in recommended_topics %}
+            <div class="col-md-4 mb-4">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title" data-toggle="collapse" data-target="#keywords-{{ topic.topic_id }}">
+                            {{ topic.topic_name }}
+                            <i class="fas fa-chevron-down arrow-icon"></i>
+                        </h5>
+                        <p class="card-text">
+                            <strong>Topic ID:</strong> {{ topic.topic_id }}<br>
+                            <strong>Probability:</strong> {{ (topic.topic_prob|float * 100)|round }}%
+                        </p>
+                    </div>
+                    <ul class="list-group list-group-flush collapse" id="keywords-{{ topic.topic_id }}">
+                        {% for item in topic.topic_representation %}
+                        <li class="list-group-item">{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                    <div class="card-body">
+                        <a href="#" class="card-link">See Details</a>
+                        <a href="#" class="card-link">Open Article</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('.list-group-flush').on('shown.bs.collapse hidden.bs.collapse', function(){
+                const isExpanded = $(this).hasClass('show');
+                const arrowIcon = $(this).prev().find('.arrow-icon');
+                if (isExpanded) {
+                    arrowIcon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                } else {
+                    arrowIcon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                }
+            });
+        });
+    </script>
+    {% include 'footer.html' %}
+</body>
+</html>
