@@ -265,10 +265,11 @@ def save_model(topic_model, path):
     assert isinstance(path, str), 'please provide a string as path'
     topic_model.save(path, serialization="safetensors")
 
-def load_model(path):
-    """load model from a directory path. the directory should contain json files
+def load_model():
+    """load model the directory should contain json files
     and safetensor file"""
-    # the path should be inside the function
-    assert isinstance(path, str), 'please provide a string as path'
+    # patht to model is specified below
+    path = 'nlp_systematic_review/model'
     loaded_model = BERTopic.load(path)
+
     return loaded_model
