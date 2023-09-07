@@ -25,12 +25,10 @@ def root():
 def topic_search(query: str):
 
     query_topics = app.state.model.find_topics(query)
-    print(f"format of model: {type(query_topics)}")
 
     topic_info = app.state.model.get_topic_info()
 
     topic_list =[]
-    print("--- start loop\n")
 
     for t in range(len(query_topics[0])):
         topic = topic_info[topic_info['Topic'] == query_topics[0][t]]
@@ -44,9 +42,4 @@ def topic_search(query: str):
         print(topic_dict)
         topic_list.append(topic_dict)
 
-    print("--- end loop\n")
-    print(dict({"recommended_topics":topic_list}))
-
-
-    #return topic_list #dict({"recommended_topics":topic_list})
     return dict({"recommended_topics":topic_list})
