@@ -12,7 +12,6 @@ def get_data_from_bq(query):
     client = bigquery.Client(project=GCP_PROJECT_SEBT84)
 
     query_job = client.query(query)
-    print('query done\n')
     results = query_job.result()  # Waits for job to complete.
     df = results.to_dataframe()
 
