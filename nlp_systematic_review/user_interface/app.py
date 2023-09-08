@@ -18,7 +18,7 @@ def search():
     params = {'query': keywords}
 
     # Make a GET request to the API with the parameters
-    api_url = 'http://127.0.0.1:8000/topic_search'
+    api_url = 'http://127.0.0.1:5007/topic_search'
     response = requests.get(api_url, params=params)
 
     if response.status_code == 200:
@@ -33,6 +33,11 @@ def search():
 def faq():
     return render_template('faq.html')
 
+@app.template_filter('format_topic')
+def format_topic_name(topic_name):
+    words = topic_name.split('_')[1:]  # Exclure le premier élément (ID)
+    formatted_words = [word.capitalize() for word in words]
+    return ' '.join(formatted_words)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5002)
