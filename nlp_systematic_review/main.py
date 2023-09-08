@@ -281,14 +281,14 @@ def get_latest_data_and_topics():
     table = f"topics_{TABLE}"
     query = f"""
         SELECT
-          *
+          abstract_id
+          , Topic
+          , Probability
         FROM {GCP_PROJECT_SEBT84}.{BQ_DATASET}.{table}
         """
     print(f"✅ Query ready for bigquery")
 
     articles = get_data_from_bq(query)
-
-    print(f"✅ Data loaded from bigquery, with shape {articles.shape}")
 
     articles_slim = articles[['abstract_id','Topic','Probability']]
     articles_slim['article_url'] = articles_slim['abstract_id'].apply(lambda x: 'https://pubmed.ncbi.nlm.nih.gov/'+str(x))
