@@ -3,7 +3,7 @@ import pandas as pd
 import json as json
 
 from typing import List
-from nlp_systematic_review.main import preprocess_data, load_model, find_article,get_latest_data_and_topics
+from nlp_systematic_review.main import preprocess_data, load_model,get_latest_data_and_topics
 #from nlp_systematic_review.data import get_latest_data_and_topics
 from fastapi.middleware.cors import CORSMiddleware
 
