@@ -263,39 +263,6 @@ def get_id_prob_key(topic_model, method, processed_df):
 
         return doc_with_abstract_id_prob_and_topic_name
 
-
-
-def find_article(query,model,path_to_csv, frac):
-    # setup an URL concate generator
-    def url_destination(id):
-        #ULR example: 'https://pubmed.ncbi.nlm.nih.gov/16364933/'
-        url_template = 'https://pubmed.ncbi.nlm.nih.gov/'
-        return f"{url_template}{id}"
-
-    data = preprocess_data(path_to_csv, frac)
-
-    df_with_topics = pd.concat([data['abstract_id'],model.get_document_info(data)],axis=1)
-
-    # Find topics from query
-    f_topics, f_prob = model.find_topics(query)
-    topic_info = model.get_topic_info()
-
-    # extarct the options from the DB
-    for t in range(len(f_topics)):
-        topic_id = f_topics[t]
-        topic_prob = round(f_prob[t]*100,2)
-        topic_name = topic_info['Name'][topic_info['Topic'] == topic_id].values[0]
-        article_count = df_with_topics['abstract_id'][df_with_topics['Topic'] == t].count()
-        print(f"Recommended Topics: {topic_name} with a probability of {topic_prob}% & we've found {article_count} articles\n")
-
-    # Ask user for topic selection
-    selected_id = input('select a topic ID to show the articles:')
-
-    # Generate the article destination URL + display the options
-    article_list = df_with_topics[df_with_topics['Topic'] == int(selected_id)]#.count()
-    article_list['article_link'] = article_list['abstract_id'].apply(url_destination)
-    article_list[['Document','article_link']]
-
 def save_model(topic_model, path):
     """save model into a given path"""
     assert isinstance(path, str), 'please provide a string as path'
@@ -317,8 +284,11 @@ def get_latest_data_and_topics():
           *
         FROM {GCP_PROJECT_SEBT84}.{BQ_DATASET}.{table}
         """
+    print(f"✅ Query ready for bigquery")
 
     articles = get_data_from_bq(query)
+
+    print(f"✅ Data loaded from bigquery, with shape {articles.shape}")
 
     articles_slim = articles[['abstract_id','Topic','Probability']]
     articles_slim['article_url'] = articles_slim['abstract_id'].apply(lambda x: 'https://pubmed.ncbi.nlm.nih.gov/'+str(x))
