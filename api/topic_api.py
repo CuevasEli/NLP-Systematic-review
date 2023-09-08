@@ -54,8 +54,6 @@ def topic_search(query: str):
 
         for r in range(article_count):
             article_id = article.iloc[r][0]
-            print(article_id)
-
             article_prob = article.iloc[r][2]
             article_url = article.iloc[r][3]
             article_details = get_article_details(article_id)
