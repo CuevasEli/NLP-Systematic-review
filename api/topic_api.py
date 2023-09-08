@@ -4,6 +4,7 @@ import json as json
 
 from typing import List
 from nlp_systematic_review.main import preprocess_data, load_model,get_latest_data_and_topics
+from nlp_systematic_review.web_scraping import get_article_details
 #from nlp_systematic_review.data import get_latest_data_and_topics
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -42,25 +43,28 @@ def topic_search(query: str):
         topic_name = list(topic['Name'])[0]
         topic_representation = list(topic['Representation'])[0]
 
-        print(f"topic id:{topic_id}")
+        #print(f"topic id:{topic_id}")
 
         article = articles[articles['Topic'] == topic_id].sort_values('Probability',ascending=False)
 
         article_count = article.shape[0]
 
-        print(article_count)
-        print(article.shape[0])
-
-
         article_list = []
+
 
         for r in range(article_count):
             article_id = article.iloc[r][0]
+            print(article_id)
+
             article_prob = article.iloc[r][2]
             article_url = article.iloc[r][3]
-            article_list.append(dict({'article_id':str(article_id)
+            article_details = get_article_details(article_id)
+            dict_1 = dict({'article_id':str(article_id)
                               ,'article_prob':str(article_prob)
-                              ,'article_url':article_url}))
+                              ,'article_url':article_url})
+
+            dict_1.update(article_details)
+            article_list.append(dict_1)
 
         topic_dict = dict({"topic_id":str(topic_id)
                            ,"topic_prob":str(topic_prob)
