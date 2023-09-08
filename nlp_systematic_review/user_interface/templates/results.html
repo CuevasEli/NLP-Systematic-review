@@ -27,33 +27,41 @@
 </head>
 <body class="bg-light">
     <div class="container mt-5">
-        <h1 class="mb-4 text-white">Recommended Articles</h1>
+        <h1 class="mb-4 text-white">Recommended Topics</h1>
         <div class="row">
-            {% for topic in recommended_topics %}
-            <div class="col-md-4 mb-4">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title" data-toggle="collapse" data-target="#keywords-{{ topic.topic_id }}">
-                            {{ topic.topic_name }}
-                            <i class="fas fa-chevron-down arrow-icon"></i>
-                        </h5>
-                        <p class="card-text">
-                            <strong>Topic ID:</strong> {{ topic.topic_id }}<br>
-                            <strong>Probability:</strong> {{ (topic.topic_prob|float * 100)|round }}%
-                        </p>
-                    </div>
-                    <ul class="list-group list-group-flush collapse" id="keywords-{{ topic.topic_id }}">
-                        {% for item in topic.topic_representation %}
-                        <li class="list-group-item">{{ item }}</li>
-                        {% endfor %}
-                    </ul>
-                    <div class="card-body">
-                        <a href="#" class="card-link">See Details</a>
-                        <a href="#" class="card-link">Open Article</a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
+          {% for topic in recommended_topics %}
+          <div class="col-md-4 mb-4">
+              <div class="card" style="width: 18rem;">
+                  <div class="card-body">
+                    <h5 class="card-title" data-toggle="collapse" data-target="#articles-{{ topic.topic_id }}">
+                      {{ topic.topic_name|format_topic }}
+                      <i class="fas fa-chevron-down arrow-icon"></i>
+                  </h5>
+
+                      <p class="card-text">
+                          <strong>Topic ID:</strong> {{ topic.topic_id }}<br>
+                          <strong>Probability:</strong> {{ (topic.topic_prob|float * 100)|round }}%<br>
+                          <strong>Article Count:</strong> {{ topic.article_count }}<br>
+                      </p>
+                  </div>
+                  <ul class="list-group list-group-flush collapse" id="articles-{{ topic.topic_id }}">
+                      {% for article in topic.article_list %}
+                      <li class="list-group-item">
+                          <a href="{{ article.article_url }}" target="_blank">Article ID: {{ article.article_id }} (Probability: {{ (article.article_prob|float * 100)|round }}%)</a>
+                      </li>
+                      {% endfor %}
+                  </ul>
+                  <div class="card-body">
+                      <a href="#" class="card-link" data-toggle="collapse" data-target="#keywords-{{ topic.topic_id }}">See Keywords</a>
+                  </div>
+                  <div class="collapse" id="keywords-{{ topic.topic_id }}">
+                      <div class="card-body">
+                          <strong>Keywords:</strong> {{ topic.topic_representation|join(", ") }}<br>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          {% endfor %}
         </div>
     </div>
 
