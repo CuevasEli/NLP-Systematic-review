@@ -16,3 +16,7 @@ uvicorn
 # tests
 httpx
 pytest-asyncio
+
+#docker
+# hdbscan==0.8.27
+# PyYAML==6.0.1
