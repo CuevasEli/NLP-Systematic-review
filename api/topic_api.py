@@ -4,7 +4,7 @@ import json as json
 
 from typing import List
 from nlp_systematic_review.main import preprocess_data, load_model,get_latest_data_and_topics
-from nlp_systematic_review.web_scraping import get_article_details
+#from nlp_systematic_review.web_scraping import get_article_details
 #from nlp_systematic_review.data import get_latest_data_and_topics
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -56,12 +56,12 @@ def topic_search(query: str):
             article_id = article.iloc[r][0]
             article_prob = article.iloc[r][2]
             article_url = article.iloc[r][3]
-            article_details = get_article_details(article_id)
+            #article_details = get_article_details(article_id)
             dict_1 = dict({'article_id':str(article_id)
                               ,'article_prob':str(article_prob)
                               ,'article_url':article_url})
 
-            dict_1.update(article_details)
+            #dict_1.update(article_details)
             article_list.append(dict_1)
 
         topic_dict = dict({"topic_id":str(topic_id)
@@ -69,7 +69,7 @@ def topic_search(query: str):
                            ,"topic_name":topic_name
                            ,"topic_representation":topic_representation
                            ,'article_count':str(article_count)
-                            ,'article_list':article_list
+                           ,'article_list':article_list
                            })
 
         topic_list.append(topic_dict)
