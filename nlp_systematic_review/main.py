@@ -1,4 +1,4 @@
-from bertopic import *
+from bertopic import BERTopic
 import pandas as pd
 import numpy as np
 
@@ -294,3 +294,23 @@ def get_latest_data_and_topics():
     articles_slim['article_url'] = articles_slim['abstract_id'].apply(lambda x: 'https://pubmed.ncbi.nlm.nih.gov/'+str(x))
 
     return articles_slim
+
+def get_article_title():
+    full_table_name = f"{GCP_PROJECT_SEBT84}.{BQ_DATASET}.article_title_2_{TABLE}"
+
+    client = bigquery.Client(project=GCP_PROJECT_SEBT84)
+    query = f"""
+        SELECT
+          article_id
+          , article_title
+        FROM {full_table_name}
+        """
+    query_job = client.query(query)
+
+    results = query_job.result().to_dataframe()  # Waits for job to complete.
+
+    results[['article_id']] = results[['article_id']].astype(object)
+
+    print(f"✅ Article titles loaded from bigquery")
+
+    return results
