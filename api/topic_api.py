@@ -59,10 +59,10 @@ def topic_search(query: str):
             article_prob = article.iloc[r][2]
             article_url = article.iloc[r][3]
 
-            if article_id in article_titles['article_id'].tolist():
+            try:
                 article_title_index = article_titles.index[article_titles['article_id'] == article_id].tolist()[0]
                 article_title = article_titles.iloc[article_title_index]['article_title']
-            else:
+            except:
                 article_title = 'No title available for this article.'
 
             #article_details = get_article_details(article_id)
